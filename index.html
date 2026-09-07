@@ -3,88 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Lucro - Vendedor Online</title>
+<title>Calculadora de Lucro 3.0</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-body{background:#f5f5f7;color:#1d1d1f;padding:16px}
+body{background:#f5f5f7;color:#1d1d1f;padding:12px}
 .container{max-width:480px;margin:0 auto;background:white;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.08);overflow:hidden}
-.header{background:#111;padding:20px;text-align:center;color:white}
-.header h1{font-size:20px;margin-bottom:4px}
-.header p{font-size:13px;opacity:.7}
-.form{padding:20px;display:flex;flex-direction:column;gap:14px}
-label{font-size:13px;font-weight:600;opacity:.8;margin-bottom:4px;display:block}
-select,input{width:100%;padding:14px;border:1.5px solid #e5e5ea;border-radius:12px;font-size:16px;outline:none;background:#fafafa}
+.header{background:#111;padding:18px;text-align:center;color:white}
+.header h1{font-size:20px}
+.header p{font-size:12px;opacity:.6;margin-top:4px}
+.tabs{display:flex;background:#f0f0f2;padding:6px;margin:12px;border-radius:12px;gap:6px}
+.tabs button{flex:1;padding:10px;border:none;border-radius:8px;font-weight:700;font-size:13px;background:transparent}
+.tabs button.active{background:#111;color:white}
+.form{padding:0 18px 18px 18px;display:flex;flex-direction:column;gap:12px}
+.tab-content{display:none;flex-direction:column;gap:12px}
+.tab-content.active{display:flex}
+label{font-size:12px;font-weight:700;opacity:.7;margin-bottom:4px;display:block}
+select,input{width:100%;padding:13px;border:1.5px solid #e5e5ea;border-radius:10px;font-size:15px;background:#fafafa;outline:none}
 select:focus,input:focus{border-color:#111;background:white}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-button#calc{background:#111;color:white;border:none;padding:16px;border-radius:12px;font-size:16px;font-weight:700;margin-top:6px}
-.result{margin:0 20px 20px 20px;background:#f9f9fb;border-radius:16px;padding:18px;display:none;border:2px solid #111}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button.calc{background:#111;color:white;border:none;padding:15px;border-radius:12px;font-size:15px;font-weight:800}
+.result{background:#f9f9fb;border-radius:14px;padding:16px;border:2px solid #111;display:none}
 .result.show{display:block}
-.lucro-principal{text-align:center;padding:10px 0 16px 0;border-bottom:1px dashed #ddd;margin-bottom:12px}
-.lucro-principal span{font-size:14px;opacity:.7}
-.lucro-principal b{font-size:32px;display:block;margin-top:4px}
+.lucro-principal{text-align:center;padding:8px 0 14px 0;border-bottom:1px dashed #ddd;margin-bottom:10px}
+.lucro-principal b{font-size:30px;display:block;margin-top:4px}
 .lucro-pos{color:#0a7a32}.lucro-neg{color:#d12c2c}
-.linha{display:flex;justify-content:space-between;padding:8px 0;font-size:14px}
-.acoes{display:flex;gap:10px;margin-top:14px}
-.acoes button{flex:1;padding:12px;border-radius:10px;border:1.5px solid #111;font-weight:600;font-size:14px;background:white}
+.linha{display:flex;justify-content:space-between;padding:7px 0;font-size:13px}
+.destaque{background:#111;color:white;border-radius:10px;padding:12px;text-align:center;margin-top:8px}
+.destaque b{font-size:22px;display:block}
+.acoes{display:flex;gap:8px;margin-top:10px}
+.acoes button{flex:1;padding:11px;border-radius:10px;border:1.5px solid #111;font-weight:700;font-size:13px;background:white}
 .acoes button.preto{background:#111;color:white}
+small{font-size:11px;opacity:.6;text-align:center;display:block;margin-top:4px}
 </style>
 </head>
 <body>
 <div class="container">
-<div class="header"><h1>Calculadora de Lucro 💰</h1><p>Shopee, ML, Amazon e outros</p></div>
-<div class="form">
-<div><label>Marketplace</label><select id="marketplace"><option value="shopee">Shopee (14% + R$ 4 fixo)</option><option value="mercadolivre">Mercado Livre (16%)</option><option value="amazon">Amazon (15%)</option><option value="magalu">Magalu (16%)</option><option value="tiktok">TikTok Shop (8%)</option><option value="outro">Outro</option></select></div>
-<div class="row"><div><label>Compra (R$)</label><input id="compra" type="text" inputmode="decimal" value="24"></div><div><label>Venda (R$)</label><input id="venda" type="text" inputmode="decimal" value="35"></div></div>
-<div class="row"><div><label>Taxa (%)</label><input id="taxaPerc" type="text" inputmode="decimal" value="14"></div><div><label>Taxa fixa (R$)</label><input id="taxaFixa" type="text" inputmode="decimal" value="4"></div></div>
-<div class="row"><div><label>Embalagem (R$)</label><input id="embalagem" type="text" inputmode="decimal" value="1,5"></div><div><label>Frete (R$)</label><input id="frete" type="text" inputmode="decimal" value="5"></div></div>
-<div><label>Outros custos (R$)</label><input id="outros" type="text" inputmode="decimal" value="2,50"></div>
-<button id="calc" onclick="calcular()">CALCULAR LUCRO</button>
+<div class="header"><h1>Calculadora de Lucro 3.0 💰</h1><p>By Marcos - Vendedor Shopee</p></div>
+<div class="tabs">
+<button id="tab1" class="active" onclick="trocarAba(1)">📊 LUCRO ATUAL</button>
+<button id="tab2" onclick="trocarAba(2)">🎯 PREÇO IDEAL</button>
 </div>
-<div id="resultado" class="result">
-<div class="lucro-principal"><span>Lucro líquido:</span><b id="lucroValor">R$ 0,00</b><span id="lucroStatus"></span></div>
-<div class="linha"><span>Venda</span><b id="rVenda"></b></div>
-<div class="linha"><span>Taxa</span><b id="rTaxa"></b></div>
-<div class="linha"><span>Custo produto</span><b id="rCompra"></b></div>
-<div class="linha"><span>Extras</span><b id="rExtras"></b></div>
-<div class="linha"><span>Custo total</span><b id="rCustoTotal"></b></div>
-<div class="linha" style="border-top:1px solid #eee;margin-top:6px;padding-top:12px;font-weight:800"><span>Margem</span><b id="rMargem"></b></div>
-<div class="acoes"><button onclick="copiar()">Copiar</button><button class="preto" onclick="compartilhar()">WhatsApp</button></div>
+<div class="form">
+<div><label>Marketplace</label><select id="marketplace"><option value="shopee">Shopee (14% + R$4 fixo)</option><option value="mercadolivre">Mercado Livre (16%)</option><option value="amazon">Amazon (15%)</option><option value="magalu">Magalu (16%)</option><option value="tiktok">TikTok Shop (8%)</option><option value="outro">Outro (Personalizado)</option></select></div>
+<div class="row"><div><label>Taxa (%)</label><input id="taxaPerc" type="text" value="14"></div><div><label>Taxa fixa (R$)</label><input id="taxaFixa" type="text" value="4"></div></div>
+
+<div id="conteudo1" class="tab-content active">
+<div class="row"><div><label>Compra (R$)</label><input id="compra1" type="text" value="10"></div><div><label>Venda (R$)</label><input id="venda1" type="text" value="35"></div></div>
+<div class="row"><div><label>Embalagem (R$)</label><input id="emb1" type="text" value="1,5"></div><div><label>Frete + Outros (R$)</label><input id="extras1" type="text" value="7,50"></div></div>
+<button class="calc" onclick="calcularLucro()">CALCULAR LUCRO</button>
+<div id="res1" class="result"><div class="lucro-principal"><span>Lucro líquido:</span><b id="lucroValor"></b><span id="lucroStatus"></span></div><div class="linha"><span>Venda</span><b id="rVenda"></b></div><div class="linha"><span>Taxa</span><b id="rTaxa"></b></div><div class="linha"><span>Custo + Extras</span><b id="rCusto"></b></div><div class="linha" style="font-weight:800;border-top:1px solid #eee;margin-top:6px;padding-top:10px"><span>Margem</span><b id="rMargem"></b></div></div>
+</div>
+
+<div id="conteudo2" class="tab-content">
+<div class="row"><div><label>Compra (R$)</label><input id="compra2" type="text" value="10"></div><div><label>Quero Lucrar (R$)</label><input id="lucroDesejado" type="text" value="10"></div></div>
+<div class="row"><div><label>Embalagem (R$)</label><input id="emb2" type="text" value="1,5"></div><div><label>Frete + Outros (R$)</label><input id="extras2" type="text" value="7,50"></div></div>
+<button class="calc" onclick="calcularPrecoIdeal()">CALCULAR PREÇO IDEAL</button>
+<div id="res2" class="result"><div class="lucro-principal"><span>Venda por no mínimo:</span></div><div class="destaque"><span>PREÇO IDEAL</span><b id="precoIdeal">R$ 0,00</b></div><small>Esse preço já cobre taxa, custos e seu lucro desejado</small><div style="margin-top:12px"><div class="linha"><span>Se vender por isso, taxa será</span><b id="rTaxaIdeal"></b></div><div class="linha"><span>Seu lucro será</span><b id="rLucroIdeal"></b></div><div class="linha"><span>Margem</span><b id="rMargemIdeal"></b></div></div><div class="acoes"><button onclick="usarPreco()">Usar esse preço na Aba 1</button></div></div>
+</div>
+
 </div>
 </div>
 <script>
-const taxas={shopee:{perc:14,fixa:4},mercadolivre:{perc:16,fixa:0},amazon:{perc:15,fixa:0},magalu:{perc:16,fixa:0},tiktok:{perc:8,fixa:0},outro:{perc:15,fixa:0}};
-function toNum(v){if(!v)return 0;let s=v.toString().replace(',','.').replace(/[^0-9.-]/g,'');return parseFloat(s)||0;}
+const taxas={shopee:{perc:14,fixa:4},mercadolivre:{perc:16,fixa:0},amazon:{perc:15,fixa:0},magalu:{perc:16,fixa:0},tiktok:{perc:8,fixa:0},outro:{perc:14,fixa:4}};
+function toNum(v){if(!v)return 0;return parseFloat(v.toString().replace(',','.').replace(/[^0-9.-]/g,''))||0;}
+function fmt(v){return 'R$ '+v.toFixed(2).replace('.',',');}
 document.getElementById('marketplace').addEventListener('change',function(){const t=taxas[this.value];document.getElementById('taxaPerc').value=t.perc;document.getElementById('taxaFixa').value=t.fixa;});
-function calcular(){
-const compra=toNum(document.getElementById('compra').value);
-const venda=toNum(document.getElementById('venda').value);
+function trocarAba(n){document.getElementById('tab1').classList.toggle('active',n===1);document.getElementById('tab2').classList.toggle('active',n===2);document.getElementById('conteudo1').classList.toggle('active',n===1);document.getElementById('conteudo2').classList.toggle('active',n===2);}
+
+function calcularLucro(){
+const compra=toNum(document.getElementById('compra1').value);
+const venda=toNum(document.getElementById('venda1').value);
 const taxaPerc=toNum(document.getElementById('taxaPerc').value);
 const taxaFixa=toNum(document.getElementById('taxaFixa').value);
-const embalagem=toNum(document.getElementById('embalagem').value);
-const frete=toNum(document.getElementById('frete').value);
-const outros=toNum(document.getElementById('outros').value);
-if(venda<=0){alert('Coloque o preço de venda');return;}
+const emb=toNum(document.getElementById('emb1').value);
+const extras=toNum(document.getElementById('extras1').value);
+if(venda<=0){alert('Coloque a venda');return;}
 const valorTaxa=(venda*taxaPerc/100)+taxaFixa;
-const extras=embalagem+frete+outros;
-const custoTotal=compra+valorTaxa+extras;
-const lucro=venda-custoTotal;
-const margem=venda>0?(lucro/venda*100):0;
-const res=document.getElementById('resultado');
-res.classList.add('show');
-res.style.display='block';
-document.getElementById('lucroValor').textContent='R$ '+lucro.toFixed(2).replace('.',',');
+const custoTotal=compra+emb+extras;
+const lucro=venda-custoTotal-valorTaxa;
+const margem=venda>0?lucro/venda*100:0;
+const res=document.getElementById('res1');res.classList.add('show');res.style.display='block';
+document.getElementById('lucroValor').textContent=fmt(lucro);
 document.getElementById('lucroValor').className=lucro>=0?'lucro-pos':'lucro-neg';
-document.getElementById('lucroStatus').innerHTML='<br>'+ (lucro>=0?'✅ Com lucro':'❌ PREJUÍZO! Aumente o preço');
-document.getElementById('rVenda').textContent='R$ '+venda.toFixed(2).replace('.',',');
-document.getElementById('rTaxa').textContent='R$ '+valorTaxa.toFixed(2).replace('.',',');
-document.getElementById('rCompra').textContent='R$ '+compra.toFixed(2).replace('.',',');
-document.getElementById('rExtras').textContent='R$ '+extras.toFixed(2).replace('.',',');
-document.getElementById('rCustoTotal').textContent='R$ '+custoTotal.toFixed(2).replace('.',',');
-document.getElementById('rMargem').textContent=margem.toFixed(2).replace('.',',')+'%';
+document.getElementById('lucroStatus').innerHTML='<br>'+(lucro>=0?'✅ Com lucro':'❌ PREJUÍZO');
+document.getElementById('rVenda').textContent=fmt(venda);
+document.getElementById('rTaxa').textContent=fmt(valorTaxa);
+document.getElementById('rCusto').textContent=fmt(custoTotal);
+document.getElementById('rMargem').textContent=margem.toFixed(1).replace('.',',')+'%';
 }
-window.onload=calcular;
-function copiar(){const t=`Lucro: ${document.getElementById('lucroValor').innerText} | Venda: ${document.getElementById('rVenda').innerText} | Margem: ${document.getElementById('rMargem').innerText}`;navigator.clipboard.writeText(t).then(()=>alert('Copiado!'));}
-function compartilhar(){const t=`*Calculadora de Lucro*%0A💰 Lucro: ${document.getElementById('lucroValor').innerText}%0A📦 Venda: ${document.getElementById('rVenda').innerText}%0A📊 Margem: ${document.getElementById('rMargem').innerText}`;window.open(`https://wa.me/?text=${t}`,'_blank');}
+function calcularPrecoIdeal(){
+const compra=toNum(document.getElementById('compra2').value);
+const lucroDesejado=toNum(document.getElementById('lucroDesejado').value);
+const taxaPerc=toNum(document.getElementById('taxaPerc').value)/100;
+const taxaFixa=toNum(document.getElementById('taxaFixa').value);
+const emb=toNum(document.getElementById('emb2').value);
+const extras=toNum(document.getElementById('extras2').value);
+const custosFixos=compra+emb+extras+taxaFixa+lucroDesejado;
+if(taxaPerc>=1){alert('Taxa não pode ser 100%');return;}
+const precoIdeal=custosFixos/(1-taxaPerc);
+const valorTaxa=(precoIdeal*taxaPerc)+taxaFixa;
+const margem=precoIdeal>0?lucroDesejado/precoIdeal*100:0;
+const res=document.getElementById('res2');res.classList.add('show');res.style.display='block';
+document.getElementById('precoIdeal').textContent=fmt(precoIdeal);
+document.getElementById('rTaxaIdeal').textContent=fmt(valorTaxa);
+document.getElementById('rLucroIdeal').textContent=fmt(lucroDesejado);
+document.getElementById('rMargemIdeal').textContent=margem.toFixed(1).replace('.',',')+'%';
+window.precoIdealCalculado=precoIdeal;
+}
+function usarPreco(){if(window.precoIdealCalculado){document.getElementById('venda1').value=window.precoIdealCalculado.toFixed(2).replace('.',',');trocarAba(1);calcularLucro();window.scrollTo({top:0,behavior:'smooth'});}}
+window.onload=()=>{calcularLucro();};
 </script>
 </body>
 </html>
