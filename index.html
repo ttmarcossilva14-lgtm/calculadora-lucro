@@ -3,23 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Lucro 3.0</title>
+<title>Calculadora VIP - Marcos</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-body{background:#f5f5f7;color:#1d1d1f;padding:12px}
-.container{max-width:480px;margin:0 auto;background:white;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.08);overflow:hidden}
+body{background:#111;color:white;min-height:100vh}
+#login{max-width:400px;margin:0 auto;padding:40px 20px;text-align:center;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+#login h1{font-size:26px;margin-bottom:8px}
+#login p{opacity:.6;font-size:13px;margin-bottom:24px}
+#login input{width:100%;padding:16px;border-radius:12px;border:2px solid #333;background:#1a1a1a;color:white;font-size:18px;text-align:center;letter-spacing:2px;text-transform:uppercase}
+#login button{width:100%;margin-top:12px;background:white;color:#111;border:none;padding:16px;border-radius:12px;font-weight:800;font-size:16px}
+#login small{display:block;margin-top:20px;opacity:.4;font-size:11px}
+.container{max-width:480px;margin:0 auto;background:white;color:#1d1d1f;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.08);overflow:hidden;display:none}
+.container.show{display:block}
 .header{background:#111;padding:18px;text-align:center;color:white}
-.header h1{font-size:20px}
-.header p{font-size:12px;opacity:.6;margin-top:4px}
 .tabs{display:flex;background:#f0f0f2;padding:6px;margin:12px;border-radius:12px;gap:6px}
 .tabs button{flex:1;padding:10px;border:none;border-radius:8px;font-weight:700;font-size:13px;background:transparent}
 .tabs button.active{background:#111;color:white}
 .form{padding:0 18px 18px 18px;display:flex;flex-direction:column;gap:12px}
-.tab-content{display:none;flex-direction:column;gap:12px}
-.tab-content.active{display:flex}
+.tab-content{display:none;flex-direction:column;gap:12px}.tab-content.active{display:flex}
 label{font-size:12px;font-weight:700;opacity:.7;margin-bottom:4px;display:block}
-select,input{width:100%;padding:13px;border:1.5px solid #e5e5ea;border-radius:10px;font-size:15px;background:#fafafa;outline:none}
-select:focus,input:focus{border-color:#111;background:white}
+select,input.calc-input{width:100%;padding:13px;border:1.5px solid #e5e5ea;border-radius:10px;font-size:15px;background:#fafafa;outline:none}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 button.calc{background:#111;color:white;border:none;padding:15px;border-radius:12px;font-size:15px;font-weight:800}
 .result{background:#f9f9fb;border-radius:14px;padding:16px;border:2px solid #111;display:none}
@@ -30,88 +33,93 @@ button.calc{background:#111;color:white;border:none;padding:15px;border-radius:1
 .linha{display:flex;justify-content:space-between;padding:7px 0;font-size:13px}
 .destaque{background:#111;color:white;border-radius:10px;padding:12px;text-align:center;margin-top:8px}
 .destaque b{font-size:22px;display:block}
-.acoes{display:flex;gap:8px;margin-top:10px}
-.acoes button{flex:1;padding:11px;border-radius:10px;border:1.5px solid #111;font-weight:700;font-size:13px;background:white}
-.acoes button.preto{background:#111;color:white}
-small{font-size:11px;opacity:.6;text-align:center;display:block;margin-top:4px}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:#f5f5f7;font-size:11px}
+.topbar button{border:none;background:transparent;font-size:11px;text-decoration:underline;opacity:.6}
 </style>
 </head>
 <body>
-<div class="container">
-<div class="header"><h1>Calculadora de Lucro 3.0 💰</h1><p>By Marcos - Vendedor Shopee</p></div>
+<div id="login">
+<h1>🔒 ACESSO VIP</h1>
+<p>Calculadora de Lucro 4.0<br>Digite a senha liberada pelo Marcos</p>
+<input id="senhaInput" type="text" placeholder="DIGITE A SENHA">
+<button onclick="verificarSenha()">DESBLOQUEAR CALCULADORA</button>
+<small>SENHA ATUAL DE TESTE: LUCRO10<br>Entre em contato: WhatsApp do Marcos</small>
+<p id="erro" style="color:#ff6b6b;margin-top:12px;font-size:13px;display:none">Senha incorreta! Chame no WhatsApp.</p>
+</div>
+
+<div id="app" class="container">
+<div class="topbar"><span>✅ Acesso VIP liberado até: <b id="validade"></b></span><button onclick="sair()">Sair</button></div>
+<div class="header"><h1>Calculadora de Lucro VIP 💰</h1><p>Versão paga - by Marcos</p></div>
 <div class="tabs">
-<button id="tab1" class="active" onclick="trocarAba(1)">📊 LUCRO ATUAL</button>
+<button id="tab1" class="active" onclick="trocarAba(1)">📊 LUCRO</button>
 <button id="tab2" onclick="trocarAba(2)">🎯 PREÇO IDEAL</button>
 </div>
 <div class="form">
-<div><label>Marketplace</label><select id="marketplace"><option value="shopee">Shopee (14% + R$4 fixo)</option><option value="mercadolivre">Mercado Livre (16%)</option><option value="amazon">Amazon (15%)</option><option value="magalu">Magalu (16%)</option><option value="tiktok">TikTok Shop (8%)</option><option value="outro">Outro (Personalizado)</option></select></div>
-<div class="row"><div><label>Taxa (%)</label><input id="taxaPerc" type="text" value="14"></div><div><label>Taxa fixa (R$)</label><input id="taxaFixa" type="text" value="4"></div></div>
+<div><label>Marketplace</label><select id="marketplace"><option value="shopee">Shopee (14% + R$4)</option><option value="mercadolivre">Mercado Livre (16%)</option><option value="amazon">Amazon (15%)</option><option value="magalu">Magalu (16%)</option><option value="tiktok">TikTok Shop (8%)</option><option value="outro">Outro</option></select></div>
+<div class="row"><div><label>Taxa (%)</label><input class="calc-input" id="taxaPerc" type="text" value="14"></div><div><label>Taxa fixa (R$)</label><input class="calc-input" id="taxaFixa" type="text" value="4"></div></div>
 
 <div id="conteudo1" class="tab-content active">
-<div class="row"><div><label>Compra (R$)</label><input id="compra1" type="text" value="10"></div><div><label>Venda (R$)</label><input id="venda1" type="text" value="35"></div></div>
-<div class="row"><div><label>Embalagem (R$)</label><input id="emb1" type="text" value="1,5"></div><div><label>Frete + Outros (R$)</label><input id="extras1" type="text" value="7,50"></div></div>
+<div class="row"><div><label>Compra (R$)</label><input class="calc-input" id="compra1" type="text" value="10"></div><div><label>Venda (R$)</label><input class="calc-input" id="venda1" type="text" value="35"></div></div>
+<div class="row"><div><label>Embalagem (R$)</label><input class="calc-input" id="emb1" type="text" value="1,5"></div><div><label>Frete+Outros (R$)</label><input class="calc-input" id="extras1" type="text" value="7,50"></div></div>
 <button class="calc" onclick="calcularLucro()">CALCULAR LUCRO</button>
-<div id="res1" class="result"><div class="lucro-principal"><span>Lucro líquido:</span><b id="lucroValor"></b><span id="lucroStatus"></span></div><div class="linha"><span>Venda</span><b id="rVenda"></b></div><div class="linha"><span>Taxa</span><b id="rTaxa"></b></div><div class="linha"><span>Custo + Extras</span><b id="rCusto"></b></div><div class="linha" style="font-weight:800;border-top:1px solid #eee;margin-top:6px;padding-top:10px"><span>Margem</span><b id="rMargem"></b></div></div>
+<div id="res1" class="result"><div class="lucro-principal"><span>Lucro:</span><b id="lucroValor"></b><span id="lucroStatus"></span></div><div class="linha"><span>Venda</span><b id="rVenda"></b></div><div class="linha"><span>Taxa</span><b id="rTaxa"></b></div><div class="linha"><span>Custo</span><b id="rCusto"></b></div><div class="linha" style="font-weight:800;border-top:1px solid #eee;margin-top:6px;padding-top:10px"><span>Margem</span><b id="rMargem"></b></div></div>
 </div>
 
 <div id="conteudo2" class="tab-content">
-<div class="row"><div><label>Compra (R$)</label><input id="compra2" type="text" value="10"></div><div><label>Quero Lucrar (R$)</label><input id="lucroDesejado" type="text" value="10"></div></div>
-<div class="row"><div><label>Embalagem (R$)</label><input id="emb2" type="text" value="1,5"></div><div><label>Frete + Outros (R$)</label><input id="extras2" type="text" value="7,50"></div></div>
+<div class="row"><div><label>Compra (R$)</label><input class="calc-input" id="compra2" type="text" value="10"></div><div><label>Quero Lucrar (R$)</label><input class="calc-input" id="lucroDesejado" type="text" value="10"></div></div>
+<div class="row"><div><label>Embalagem</label><input class="calc-input" id="emb2" type="text" value="1,5"></div><div><label>Frete+Outros</label><input class="calc-input" id="extras2" type="text" value="7,50"></div></div>
 <button class="calc" onclick="calcularPrecoIdeal()">CALCULAR PREÇO IDEAL</button>
-<div id="res2" class="result"><div class="lucro-principal"><span>Venda por no mínimo:</span></div><div class="destaque"><span>PREÇO IDEAL</span><b id="precoIdeal">R$ 0,00</b></div><small>Esse preço já cobre taxa, custos e seu lucro desejado</small><div style="margin-top:12px"><div class="linha"><span>Se vender por isso, taxa será</span><b id="rTaxaIdeal"></b></div><div class="linha"><span>Seu lucro será</span><b id="rLucroIdeal"></b></div><div class="linha"><span>Margem</span><b id="rMargemIdeal"></b></div></div><div class="acoes"><button onclick="usarPreco()">Usar esse preço na Aba 1</button></div></div>
+<div id="res2" class="result"><div class="destaque"><span>PREÇO IDEAL</span><b id="precoIdeal">R$ 0,00</b></div><div style="margin-top:10px"><div class="linha"><span>Taxa</span><b id="rTaxaIdeal"></b></div><div class="linha"><span>Lucro</span><b id="rLucroIdeal"></b></div></div></div>
+</div>
+</div>
 </div>
 
-</div>
-</div>
 <script>
-const taxas={shopee:{perc:14,fixa:4},mercadolivre:{perc:16,fixa:0},amazon:{perc:15,fixa:0},magalu:{perc:16,fixa:0},tiktok:{perc:8,fixa:0},outro:{perc:14,fixa:4}};
-function toNum(v){if(!v)return 0;return parseFloat(v.toString().replace(',','.').replace(/[^0-9.-]/g,''))||0;}
-function fmt(v){return 'R$ '+v.toFixed(2).replace('.',',');}
-document.getElementById('marketplace').addEventListener('change',function(){const t=taxas[this.value];document.getElementById('taxaPerc').value=t.perc;document.getElementById('taxaFixa').value=t.fixa;});
-function trocarAba(n){document.getElementById('tab1').classList.toggle('active',n===1);document.getElementById('tab2').classList.toggle('active',n===2);document.getElementById('conteudo1').classList.toggle('active',n===1);document.getElementById('conteudo2').classList.toggle('active',n===2);}
+// ===== CONFIGURAÇÃO DA SENHA - TROQUE AQUI TODO MÊS =====
+const SENHA_MESTRA = "LUCRO10"; 
+const DIAS_VALIDADE = 30;
+// ==========================================================
 
+function toNum(v){return parseFloat(v.toString().replace(',','.').replace(/[^0-9.-]/g,''))||0;}
+function fmt(v){return 'R$ '+v.toFixed(2).replace('.',',');}
+const taxas={shopee:{perc:14,fixa:4},mercadolivre:{perc:16,fixa:0},amazon:{perc:15,fixa:0},magalu:{perc:16,fixa:0},tiktok:{perc:8,fixa:0},outro:{perc:14,fixa:4}};
+document.getElementById('marketplace').addEventListener('change',function(){const t=taxas[this.value];document.getElementById('taxaPerc').value=t.perc;document.getElementById('taxaFixa').value=t.fixa;});
+
+function verificarSenha(){
+const digitada=document.getElementById('senhaInput').value.toUpperCase().trim();
+if(digitada===SENHA_MESTRA){
+const expira=new Date();expira.setDate(expira.getDate()+DIAS_VALIDADE);
+localStorage.setItem('acesso_vip','liberado');
+localStorage.setItem('expira_vip',expira.toISOString());
+mostrarApp();
+}else{
+document.getElementById('erro').style.display='block';
+}
+}
+function mostrarApp(){
+const expira=localStorage.getItem('expira_vip');
+if(expira){document.getElementById('validade').textContent=new Date(expira).toLocaleDateString('pt-BR');}
+document.getElementById('login').style.display='none';
+document.getElementById('app').classList.add('show');
+calcularLucro();
+}
+function sair(){localStorage.clear();location.reload();}
+(function(){const acesso=localStorage.getItem('acesso_vip');const expira=localStorage.getItem('expira_vip');if(acesso==='liberado' && expira && new Date(expira)>new Date()){mostrarApp();}})();
+function trocarAba(n){document.getElementById('tab1').classList.toggle('active',n===1);document.getElementById('tab2').classList.toggle('active',n===2);document.getElementById('conteudo1').classList.toggle('active',n===1);document.getElementById('conteudo2').classList.toggle('active',n===2);}
 function calcularLucro(){
-const compra=toNum(document.getElementById('compra1').value);
-const venda=toNum(document.getElementById('venda1').value);
-const taxaPerc=toNum(document.getElementById('taxaPerc').value);
-const taxaFixa=toNum(document.getElementById('taxaFixa').value);
-const emb=toNum(document.getElementById('emb1').value);
-const extras=toNum(document.getElementById('extras1').value);
-if(venda<=0){alert('Coloque a venda');return;}
-const valorTaxa=(venda*taxaPerc/100)+taxaFixa;
-const custoTotal=compra+emb+extras;
-const lucro=venda-custoTotal-valorTaxa;
-const margem=venda>0?lucro/venda*100:0;
+const compra=toNum(document.getElementById('compra1').value);const venda=toNum(document.getElementById('venda1').value);const taxaPerc=toNum(document.getElementById('taxaPerc').value);const taxaFixa=toNum(document.getElementById('taxaFixa').value);const emb=toNum(document.getElementById('emb1').value);const extras=toNum(document.getElementById('extras1').value);
+if(venda<=0)return;const valorTaxa=(venda*taxaPerc/100)+taxaFixa;const custoTotal=compra+emb+extras;const lucro=venda-custoTotal-valorTaxa;const margem=venda>0?lucro/venda*100:0;
 const res=document.getElementById('res1');res.classList.add('show');res.style.display='block';
-document.getElementById('lucroValor').textContent=fmt(lucro);
-document.getElementById('lucroValor').className=lucro>=0?'lucro-pos':'lucro-neg';
+document.getElementById('lucroValor').textContent=fmt(lucro);document.getElementById('lucroValor').className=lucro>=0?'lucro-pos':'lucro-neg';
 document.getElementById('lucroStatus').innerHTML='<br>'+(lucro>=0?'✅ Com lucro':'❌ PREJUÍZO');
-document.getElementById('rVenda').textContent=fmt(venda);
-document.getElementById('rTaxa').textContent=fmt(valorTaxa);
-document.getElementById('rCusto').textContent=fmt(custoTotal);
-document.getElementById('rMargem').textContent=margem.toFixed(1).replace('.',',')+'%';
+document.getElementById('rVenda').textContent=fmt(venda);document.getElementById('rTaxa').textContent=fmt(valorTaxa);document.getElementById('rCusto').textContent=fmt(custoTotal);document.getElementById('rMargem').textContent=margem.toFixed(1).replace('.',',')+'%';
 }
 function calcularPrecoIdeal(){
-const compra=toNum(document.getElementById('compra2').value);
-const lucroDesejado=toNum(document.getElementById('lucroDesejado').value);
-const taxaPerc=toNum(document.getElementById('taxaPerc').value)/100;
-const taxaFixa=toNum(document.getElementById('taxaFixa').value);
-const emb=toNum(document.getElementById('emb2').value);
-const extras=toNum(document.getElementById('extras2').value);
-const custosFixos=compra+emb+extras+taxaFixa+lucroDesejado;
-if(taxaPerc>=1){alert('Taxa não pode ser 100%');return;}
-const precoIdeal=custosFixos/(1-taxaPerc);
-const valorTaxa=(precoIdeal*taxaPerc)+taxaFixa;
-const margem=precoIdeal>0?lucroDesejado/precoIdeal*100:0;
+const compra=toNum(document.getElementById('compra2').value);const lucroDesejado=toNum(document.getElementById('lucroDesejado').value);const taxaPerc=toNum(document.getElementById('taxaPerc').value)/100;const taxaFixa=toNum(document.getElementById('taxaFixa').value);const emb=toNum(document.getElementById('emb2').value);const extras=toNum(document.getElementById('extras2').value);
+const custosFixos=compra+emb+extras+taxaFixa+lucroDesejado;const precoIdeal=custosFixos/(1-taxaPerc);const valorTaxa=(precoIdeal*taxaPerc)+taxaFixa;
 const res=document.getElementById('res2');res.classList.add('show');res.style.display='block';
-document.getElementById('precoIdeal').textContent=fmt(precoIdeal);
-document.getElementById('rTaxaIdeal').textContent=fmt(valorTaxa);
-document.getElementById('rLucroIdeal').textContent=fmt(lucroDesejado);
-document.getElementById('rMargemIdeal').textContent=margem.toFixed(1).replace('.',',')+'%';
-window.precoIdealCalculado=precoIdeal;
+document.getElementById('precoIdeal').textContent=fmt(precoIdeal);document.getElementById('rTaxaIdeal').textContent=fmt(valorTaxa);document.getElementById('rLucroIdeal').textContent=fmt(lucroDesejado);
 }
-function usarPreco(){if(window.precoIdealCalculado){document.getElementById('venda1').value=window.precoIdealCalculado.toFixed(2).replace('.',',');trocarAba(1);calcularLucro();window.scrollTo({top:0,behavior:'smooth'});}}
-window.onload=()=>{calcularLucro();};
 </script>
 </body>
 </html>
