@@ -17,7 +17,7 @@ select,input{width:100%;padding:14px;border:1.5px solid #e5e5ea;border-radius:12
 select:focus,input:focus{border-color:#111;background:white}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 button#calc{background:#111;color:white;border:none;padding:16px;border-radius:12px;font-size:16px;font-weight:700;margin-top:6px}
-.result{margin:0 20px 20px 20px;background:#f9f9fb;border-radius:16px;padding:18px;display:none}
+.result{margin:0 20px 20px 20px;background:#f9f9fb;border-radius:16px;padding:18px;display:none;border:2px solid #111}
 .result.show{display:block}
 .lucro-principal{text-align:center;padding:10px 0 16px 0;border-bottom:1px dashed #ddd;margin-bottom:12px}
 .lucro-principal span{font-size:14px;opacity:.7}
@@ -34,10 +34,10 @@ button#calc{background:#111;color:white;border:none;padding:16px;border-radius:1
 <div class="header"><h1>Calculadora de Lucro 💰</h1><p>Shopee, ML, Amazon e outros</p></div>
 <div class="form">
 <div><label>Marketplace</label><select id="marketplace"><option value="shopee">Shopee (14% + R$ 4 fixo)</option><option value="mercadolivre">Mercado Livre (16%)</option><option value="amazon">Amazon (15%)</option><option value="magalu">Magalu (16%)</option><option value="tiktok">TikTok Shop (8%)</option><option value="outro">Outro</option></select></div>
-<div class="row"><div><label>Compra (R$)</label><input id="compra" type="number" inputmode="decimal" value="24"></div><div><label>Venda (R$)</label><input id="venda" type="number" inputmode="decimal" value="35"></div></div>
-<div class="row"><div><label>Taxa (%)</label><input id="taxaPerc" type="number" value="14"></div><div><label>Taxa fixa (R$)</label><input id="taxaFixa" type="number" value="4"></div></div>
-<div class="row"><div><label>Embalagem (R$)</label><input id="embalagem" type="number" value="1.5"></div><div><label>Frete (R$)</label><input id="frete" type="number" value="0"></div></div>
-<div><label>Outros custos (R$)</label><input id="outros" type="number" value="0"></div>
+<div class="row"><div><label>Compra (R$)</label><input id="compra" type="text" inputmode="decimal" value="24"></div><div><label>Venda (R$)</label><input id="venda" type="text" inputmode="decimal" value="35"></div></div>
+<div class="row"><div><label>Taxa (%)</label><input id="taxaPerc" type="text" inputmode="decimal" value="14"></div><div><label>Taxa fixa (R$)</label><input id="taxaFixa" type="text" inputmode="decimal" value="4"></div></div>
+<div class="row"><div><label>Embalagem (R$)</label><input id="embalagem" type="text" inputmode="decimal" value="1,5"></div><div><label>Frete (R$)</label><input id="frete" type="text" inputmode="decimal" value="5"></div></div>
+<div><label>Outros custos (R$)</label><input id="outros" type="text" inputmode="decimal" value="2,50"></div>
 <button id="calc" onclick="calcular()">CALCULAR LUCRO</button>
 </div>
 <div id="resultado" class="result">
@@ -47,9 +47,44 @@ button#calc{background:#111;color:white;border:none;padding:16px;border-radius:1
 <div class="linha"><span>Custo produto</span><b id="rCompra"></b></div>
 <div class="linha"><span>Extras</span><b id="rExtras"></b></div>
 <div class="linha"><span>Custo total</span><b id="rCustoTotal"></b></div>
-<div class="linha" style="border-top:1px solid #eee;margin-top:6px;padding-top:12px"><span>Margem</span><b id="rMargem"></b></div>
+<div class="linha" style="border-top:1px solid #eee;margin-top:6px;padding-top:12px;font-weight:800"><span>Margem</span><b id="rMargem"></b></div>
 <div class="acoes"><button onclick="copiar()">Copiar</button><button class="preto" onclick="compartilhar()">WhatsApp</button></div>
 </div>
 </div>
 <script>
-const taxas={shopee:{perc:14,fixa:4},mercadolivre:{perc:16,fixa:0},amazon:{perc:15,fixa:0},magalu:{perc:16,fixa:0},
+const taxas={shopee:{perc:14,fixa:4},mercadolivre:{perc:16,fixa:0},amazon:{perc:15,fixa:0},magalu:{perc:16,fixa:0},tiktok:{perc:8,fixa:0},outro:{perc:15,fixa:0}};
+function toNum(v){if(!v)return 0;let s=v.toString().replace(',','.').replace(/[^0-9.-]/g,'');return parseFloat(s)||0;}
+document.getElementById('marketplace').addEventListener('change',function(){const t=taxas[this.value];document.getElementById('taxaPerc').value=t.perc;document.getElementById('taxaFixa').value=t.fixa;});
+function calcular(){
+const compra=toNum(document.getElementById('compra').value);
+const venda=toNum(document.getElementById('venda').value);
+const taxaPerc=toNum(document.getElementById('taxaPerc').value);
+const taxaFixa=toNum(document.getElementById('taxaFixa').value);
+const embalagem=toNum(document.getElementById('embalagem').value);
+const frete=toNum(document.getElementById('frete').value);
+const outros=toNum(document.getElementById('outros').value);
+if(venda<=0){alert('Coloque o preço de venda');return;}
+const valorTaxa=(venda*taxaPerc/100)+taxaFixa;
+const extras=embalagem+frete+outros;
+const custoTotal=compra+valorTaxa+extras;
+const lucro=venda-custoTotal;
+const margem=venda>0?(lucro/venda*100):0;
+const res=document.getElementById('resultado');
+res.classList.add('show');
+res.style.display='block';
+document.getElementById('lucroValor').textContent='R$ '+lucro.toFixed(2).replace('.',',');
+document.getElementById('lucroValor').className=lucro>=0?'lucro-pos':'lucro-neg';
+document.getElementById('lucroStatus').innerHTML='<br>'+ (lucro>=0?'✅ Com lucro':'❌ PREJUÍZO! Aumente o preço');
+document.getElementById('rVenda').textContent='R$ '+venda.toFixed(2).replace('.',',');
+document.getElementById('rTaxa').textContent='R$ '+valorTaxa.toFixed(2).replace('.',',');
+document.getElementById('rCompra').textContent='R$ '+compra.toFixed(2).replace('.',',');
+document.getElementById('rExtras').textContent='R$ '+extras.toFixed(2).replace('.',',');
+document.getElementById('rCustoTotal').textContent='R$ '+custoTotal.toFixed(2).replace('.',',');
+document.getElementById('rMargem').textContent=margem.toFixed(2).replace('.',',')+'%';
+}
+window.onload=calcular;
+function copiar(){const t=`Lucro: ${document.getElementById('lucroValor').innerText} | Venda: ${document.getElementById('rVenda').innerText} | Margem: ${document.getElementById('rMargem').innerText}`;navigator.clipboard.writeText(t).then(()=>alert('Copiado!'));}
+function compartilhar(){const t=`*Calculadora de Lucro*%0A💰 Lucro: ${document.getElementById('lucroValor').innerText}%0A📦 Venda: ${document.getElementById('rVenda').innerText}%0A📊 Margem: ${document.getElementById('rMargem').innerText}`;window.open(`https://wa.me/?text=${t}`,'_blank');}
+</script>
+</body>
+</html>
