@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Lucro</title>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  background:#f4f5f7;
+  margin:0;
+  padding:20px;
+}
+.container{
+  max-width:500px;
+  margin:auto;
+  background:white;
+  padding:25px;
+  border-radius:18px;
+}
+h1{text-align:center}
+label{
+  display:block;
+  margin-top:15px;
+  font-weight:bold;
+}
+input,select{
+  width:100%;
+  padding:13px;
+  margin-top:6px;
+  box-sizing:border-box;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:16px;
+}
+button{
+  width:100%;
+  padding:15px;
+  margin-top:20px;
+  background:#111;
+  color:white;
+  border:0;
+  border-radius:8px;
+  font-size:17px;
+  font-weight:bold;
+}
+.resultado{
+  margin-top:20px;
+  padding:18px;
+  background:#f0f1f3;
+  border-radius:12px;
+  display:none;
+}
+.lucro{
+  font-size:30px;
+  font-weight:bold;
+  margin-bottom:15px;
+}
+.linha{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid #ddd;
+}
+.verde{color:green}
+.vermelho{color:red}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🧮 Calculadora de Lucro</h1>
+
+<label>Plataforma</label>
+<select id="plataforma">
+<option>Shopee</option>
+<option>Mercado Livre</option>
+<option>Outra</option>
+</select>
+
+<label>Preço de compra (R$)</label>
+<input id="compra" type="number" step="0.01" placeholder="Ex: 24">
+
+<label>Preço de venda (R$)</label>
+<input id="venda" type="number" step="0.01" placeholder="Ex: 35">
+
+<label>Taxa da plataforma (%)</label>
+<input id="taxa" type="number" step="0.01" placeholder="Ex: 15">
+
+<label>Embalagem (R$)</label>
+<input id="embalagem" type="number" step="0.01" value="0">
+
+<button onclick="calcular()">CALCULAR LUCRO</button>
+
+<div class="resultado" id="resultado">
+
+<div>Lucro líquido:</div>
+
+<div class="lucro" id="lucro"></div>
+
+<div class="linha">
+<span>Preço de venda</span>
+<b id="rvenda"></b>
+</div>
+
+<div class="linha">
+<span>Taxa da plataforma</span>
+<b id="rtaxa"></b>
+</div>
+
+<div class="linha">
+<span>Custo do produto</span>
+<b id="rcompra"></b>
+</div>
+
+<div class="linha">
+<span>Embalagem</span>
+<b id="rembalagem"></b>
+</div>
+
+<div class="linha">
+<span>Margem de lucro</span>
+<b id="margem"></b>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function dinheiro(valor){
+
+return valor.toLocaleString('pt-BR',{
+style:'currency',
+currency:'BRL'
+});
+
+}
+
+function calcular(){
+
+let compra=parseFloat(document.getElementById("compra").value)||0;
+
+let venda=parseFloat(document.getElementById("venda").value)||0;
+
+let taxa=parseFloat(document.getElementById("taxa").value)||0;
+
+let embalagem=parseFloat(document.getElementById("embalagem").value)||0;
+
+if(venda<=0){
+
+alert("Digite um preço de venda.");
+
+return;
+
+}
+
+let valorTaxa=venda*(taxa/100);
+
+let lucro=venda-compra-valorTaxa-embalagem;
+
+let margem=(lucro/venda)*100;
+
+document.getElementById("resultado").style.display="block";
+
+document.getElementById("lucro").innerText=dinheiro(lucro);
+
+document.getElementById("rvenda").innerText=dinheiro(venda);
+
+document.getElementById("rtaxa").innerText=dinheiro(valorTaxa);
+
+document.getElementById("rcompra").innerText=dinheiro(compra);
+
+document.getElementById("rembalagem").innerText=dinheiro(embalagem);
+
+document.getElementById("margem").innerText=margem.toFixed(2)+"%";
+
+if(lucro>=0){
+
+document.getElementById("lucro").className="lucro verde";
+
+}else{
+
+document.getElementById("lucro").className="lucro vermelho";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
