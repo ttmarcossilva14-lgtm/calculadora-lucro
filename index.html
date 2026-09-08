@@ -28,8 +28,61 @@ select,input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;fo
 </style>
 </head>
 <body>
-
-<div class="bar-top">
-<span>✅ Acesso VIP liberado até: <b>07/10/2026</b></span>
-<span style="color:#007bff">Sair</span>
+<div class="bar-top"><span>✅ Acesso VIP liberado até: <b>07/10/2026</b></span><span style="color:#007bff">Sair</span></div>
+<div class="topo"><h1>Calculadora de Lucro VIP 💰</h1><div class="sub">Versão Premium - Acesso Vitalício</div></div>
+<div class="card">
+<div class="tabs">
+<div class="tab ativo" id="tabLucro" onclick="mudarAba('lucro')">📊 LUCRO</div>
+<div class="tab" id="tabPreco" onclick="mudarAba('preco')">🎯 PREÇO IDEAL</div>
 </div>
+<div id="abaLucro" class="aba ativa">
+<label>Marketplace</label>
+<select id="market"><option>Shopee</option><option>Mercado Livre</option><option>Amazon</option><option>Magalu</option><option>TikTok Shop</option><option>Outro</option></select>
+<div class="grid">
+<div><label>Taxa (%)</label><input id="taxa" type="number" value="14"></div>
+<div><label>Taxa fixa (R$)</label><input id="taxafixa" type="number" value="0"></div>
+<div><label>Compra (R$)</label><input id="compra" type="number" value="10"></div>
+<div><label>Venda (R$)</label><input id="venda" type="number" value="35"></div>
+<div><label>Embalagem (R$)</label><input id="emb" type="number" value="1.5"></div>
+<div><label>Frete+Outros (R$)</label><input id="frete" type="number" value="0"></div>
+</div>
+<button class="btn" onclick="calcular()">CALCULAR LUCRO</button>
+<div class="result"><div>Lucro:</div><div class="valor" id="resLucro">R$ 7,10</div><div class="ok" id="resStatus">✅ Com lucro</div><div class="dica" id="resDetalhe"></div></div>
+</div>
+<div id="abaPreco" class="aba">
+<label>Quanto quer lucrar? (R$)</label><input id="lucroDesejado" type="number" value="10">
+<div class="grid">
+<div><label>Taxa (%)</label><input id="taxa2" type="number" value="14"></div>
+<div><label>Taxa fixa (R$)</label><input id="taxafixa2" type="number" value="0"></div>
+<div><label>Compra (R$)</label><input id="compra2" type="number" value="10"></div>
+<div><label>Embalagem+Frete (R$)</label><input id="custo2" type="number" value="1.5"></div>
+</div>
+<button class="btn" onclick="calcularPrecoIdeal()">CALCULAR PREÇO IDEAL</button>
+<div class="result"><div>Venda ideal por:</div><div class="valor" id="resPreco">R$ 0,00</div><div class="ok" id="resPrecoStatus">Digite seu lucro desejado</div><div class="dica" id="resPrecoDetalhe"></div></div>
+</div>
+</div>
+<script>
+function mudarAba(q){
+document.getElementById('abaLucro').classList.remove('ativa');
+document.getElementById('abaPreco').classList.remove('ativa');
+document.getElementById('tabLucro').classList.remove('ativo');
+document.getElementById('tabPreco').classList.remove('ativo');
+if(q==='lucro'){
+document.getElementById('abaLucro').classList.add('ativa');
+document.getElementById('tabLucro').classList.add('ativo');
+}else{
+document.getElementById('abaPreco').classList.add('ativa');
+document.getElementById('tabPreco').classList.add('ativo');
+document.getElementById('taxa2').value=document.getElementById('taxa').value;
+document.getElementById('taxafixa2').value=document.getElementById('taxafixa').value;
+document.getElementById('compra2').value=document.getElementById('compra').value;
+document.getElementById('custo2').value=(parseFloat(document.getElementById('emb').value||0)+parseFloat(document.getElementById('frete').value||0));
+}
+}
+function calcular(){
+let taxa=parseFloat(document.getElementById('taxa').value)||0;
+let taxafixa=parseFloat(document.getElementById('taxafixa').value)||0;
+let compra=parseFloat(document.getElementById('compra').value)||0;
+let venda=parseFloat(document.getElementById('venda').value)||0;
+let emb=parseFloat(document.getElementById('emb').value)||0;
+let frete=parseFloat(document.getElementById('frete').value)||
