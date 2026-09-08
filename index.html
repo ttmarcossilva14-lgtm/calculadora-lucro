@@ -13,8 +13,10 @@ body{margin:0;background:#f5f5f5;padding:0 0 30px}
 .bar-top{background:#e8ffe8;border-bottom:1px solid #c3e6c3;padding:8px 15px;font-size:13px;display:flex;justify-content:space-between}
 .card{background:#fff;margin:15px;border-radius:16px;padding:15px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
 .tabs{display:flex;gap:8px;margin-bottom:15px}
-.tab{flex:1;padding:10px;border-radius:10px;border:1px solid #ddd;text-align:center;font-weight:bold;cursor:pointer}
+.tab{flex:1;padding:10px;border-radius:10px;border:1px solid #ddd;text-align:center;font-weight:bold;cursor:pointer;background:#fff}
 .tab.ativo{background:#000;color:#fff}
+.aba{display:none}
+.aba.ativa{display:block}
 label{font-size:13px;font-weight:bold;color:#555;display:block;margin:12px 0 5px}
 select,input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;font-size:16px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -22,6 +24,7 @@ select,input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;fo
 .result{margin-top:15px;border:2px solid #000;border-radius:16px;padding:20px;text-align:center;background:#fff}
 .result .valor{font-size:32px;font-weight:bold;color:#0a7d2e;margin-top:5px}
 .ok{margin-top:10px;font-weight:bold}
+.dica{font-size:12px;color:#666;margin-top:8px;background:#f9f9f9;padding:10px;border-radius:8px}
 </style>
 </head>
 <body>
@@ -30,88 +33,3 @@ select,input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;fo
 <span>✅ Acesso VIP liberado até: <b>07/10/2026</b></span>
 <span style="color:#007bff">Sair</span>
 </div>
-
-<div class="topo">
-<h1>Calculadora de Lucro VIP 💰</h1>
-<div class="sub">Versão Premium - Acesso Vitalício</div>
-</div>
-
-<div class="card">
-<div class="tabs">
-<div class="tab ativo">📊 LUCRO</div>
-<div class="tab" style="color:#d00">🎯 PREÇO IDEAL</div>
-</div>
-
-<label>Marketplace</label>
-<select id="market">
-<option>Shopee (14% + R$4)</option>
-<option>Mercado Livre (16% + R$6)</option>
-<option>Amazon (15% + R$5)</option>
-<option>Shopee sem taxa fixa</option>
-</select>
-
-<div class="grid">
-<div>
-<label>Taxa (%)</label>
-<input id="taxa" type="number" value="14">
-</div>
-<div>
-<label>Taxa fixa (R$)</label>
-<input id="taxafixa" type="number" value="4">
-</div>
-<div>
-<label>Compra (R$)</label>
-<input id="compra" type="number" value="10">
-</div>
-<div>
-<label>Venda (R$)</label>
-<input id="venda" type="number" value="35">
-</div>
-<div>
-<label>Embalagem (R$)</label>
-<input id="emb" type="number" value="1.5">
-</div>
-<div>
-<label>Frete+Outros (R$)</label>
-<input id="frete" type="number" value="7.5">
-</div>
-</div>
-
-<button class="btn" onclick="calcular()">CALCULAR LUCRO</button>
-
-<div class="result">
-<div>Lucro:</div>
-<div class="valor" id="resLucro">R$ 7,10</div>
-<div class="ok" id="resStatus">✅ Com lucro</div>
-</div>
-</div>
-
-<script>
-function calcular(){
-let taxa = parseFloat(document.getElementById('taxa').value)||0;
-let taxafixa = parseFloat(document.getElementById('taxafixa').value)||0;
-let compra = parseFloat(document.getElementById('compra').value)||0;
-let venda = parseFloat(document.getElementById('venda').value)||0;
-let emb = parseFloat(document.getElementById('emb').value)||0;
-let frete = parseFloat(document.getElementById('frete').value)||0;
-
-let descontoTaxa = venda * (taxa/100);
-let lucro = venda - compra - emb - frete - descontoTaxa - taxafixa;
-
-document.getElementById('resLucro').innerText = "R$ " + lucro.toFixed(2).replace('.',',');
-document.getElementById('resStatus').innerText = lucro > 0 ? "✅ Com lucro" : "❌ Prejuízo";
-document.getElementById('resStatus').style.color = lucro > 0 ? "#0a7d2e" : "#d00";
-}
-calcular();
-
-document.getElementById('market').addEventListener('change', function(){
-let v = this.value;
-if(v.includes('Shopee') && v.includes('14%')){ taxa.value=14; taxafixa.value=4; }
-if(v.includes('Mercado Livre')){ taxa.value=16; taxafixa.value=6; }
-if(v.includes('Amazon')){ taxa.value=15; taxafixa.value=5; }
-if(v.includes('sem taxa')){ taxa.value=14; taxafixa.value=0; }
-});
-</script>
-
-</body>
-</html>
